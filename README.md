@@ -12,7 +12,24 @@ npm install --save arraygen
 
 ## Why?
 
-I wrote this as an exercise to get more familiar with ES6 generators and iterators. The API is just a more natural (to me) wrapper around `Array.prototype.slice()`, but instead of returning the raw array, we return the `array[Symbol.iterator]()`. I'm still exploring. I'm not sure why you might want to use this in production. Let me know if you come up with a compelling use-case. =)
+I wrote this as an exercise to get more familiar with ES6 generators and iterators. The API is just a more natural (to me) wrapper around `Array.prototype.slice()`, but instead of returning the raw array, we return the `array[Symbol.iterator]()`. 
+
+If this seems silly, it probably is. Let me know if you come up with any compelling use-cases.
+
+Here's what the `arr[Symbol.iterator]()` allows you to do that you can't do with the ES5 `Array` API:
+
+```js
+let g = arraygen(['c', 'd', 'e'])();
+g.next(); // { value: 'c', done: false }
+g.next(); // { value: 'd', done: false }
+g.next(); // { value: 'e', done: false }
+g.next(); // { value: undefined, done: true }
+```
+
+What does that buy us? It means that we can pull values one at a time, perhaps in response to asynchronous events, such as user clicks, network communications, etc...
+
+Currently, I do most of those kinds of things using [RxJS](https://github.com/Reactive-Extensions/RxJS), but now that we have native support for something like it (albeit missing most of the cool utility API), maybe there are good use cases to skip the RxJS dependency.
+
 
 ## How do you use it?
 
@@ -100,21 +117,7 @@ let [c, ...rest] = ['a', 'b', 'c', 'd', 'e'].slice(-3);
 console.log(`${ c }, ${ JSON.stringify(rest) }`); // c, ["d","e"]
 ```
 
-If all this seems silly, it probably is.
-
-Here's what the `arr[Symbol.iterator]()` allows you to do that you can't do with the ES5 `Array` API:
-
-```js
-let g = arraygen(['a', 'b', 'c', 'd', 'e'])(-3);
-g.next(); // { value: 'c', done: false }
-g.next(); // { value: 'd', done: false }
-g.next(); // { value: 'e', done: false }
-g.next(); // { value: undefined, done: true }
-```
-
-What does that buy us? It means that we can pull values one at a time, perhaps in response to asynchronous events, such as user clicks, network communications, etc...
-
-Currently, I do most of those kinds of things using [RxJS](https://github.com/Reactive-Extensions/RxJS), but now that we have native support for something like it (albeit missing most of the cool utility API), maybe there are good use cases to skip the RxJS dependency.
+As you can see, the synchronous operations are probably better handled with native `array.slice()`. It's almost certainly less typing, anyway. It might get more compelling if you experiment with using asynchronous events to trigger the `.next()` method calls... Enjoy. Let me know if you do anything interesting or fun with this.
 
 
 Written for Learn JavaScript with Eric Elliott
