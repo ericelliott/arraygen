@@ -1,6 +1,6 @@
 # arraygen
 
-Turn any array into a generator.
+Turn any array into a generator. (More accurately, grab the built-in iterator).
 
 ## Getting started
 
@@ -12,12 +12,14 @@ npm install --save arraygen
 
 ## Why?
 
-I wrote this as an exercise to get more familiar with generators. All these features are available natively with `Array.prototype.slice()`, and arrays implement the iterable interface, so I'm not sure why you might want to use this in production. Let me know if you come up with a compelling use-case. =)
+I wrote this as an exercise to get more familiar with ES6 generators and iterators. The API is just a more natural (to me) wrapper around `Array.prototype.slice()`, but instead of returning the raw array, we return the `array[Symbol.iterator]()`. I'm still exploring. I'm not sure why you might want to use this in production. Let me know if you come up with a compelling use-case. =)
+
+## How do you use it?
 
 Destructuring assignment lets you easily grab elements from an array, for example:
 
 ```js
-const [a, b] = ['a', 'b', 'c'];
+let [a, b] = ['a', 'b', 'c'];
 console.log(a); // 'a'
 console.log(b); // 'b'
 ```
@@ -25,42 +27,95 @@ console.log(b); // 'b'
 You can even use the rest operator to grab all the remaining elements of an array:
 
 ```js
-const [a, ...rest] = ['a', 'b', 'c'];
+let [a, ...rest] = ['a', 'b', 'c'];
 console.log(rest); // ['b', 'c']
 ```
 
 OK, neat, but wouldn't it be cool if you could specify a range of elements?
 
-A generator function returns an iterable object, meaning that destructuring
-assignment and `for...of` loops work with generators. What if you could wrap
-any array with a generator to take advantage of these properties? For example:
+For example:
 
 ```js
-const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
-const [...arr] = gen(1, 3); // ['b', 'c', 'd']
+let gen = arraygen(['a', 'b', 'c', 'd', 'e']);
+let [...arr] = gen(1, 3); // ['b', 'c', 'd']
 ```
 
-You could also use this to grab the first `n` elements:
+This is equivalent to:
 
 ```js
-const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
-const [...arr] = gen(3); /// ['a', 'b', 'c'];
+let arr = ['a', 'b', 'c', 'd', 'e'].slice(1, 4); // ['b', 'c', 'd']
+```
+
+You could also grab the first `n` elements:
+
+```js
+let gen = arraygen(['a', 'b', 'c', 'd', 'e']);
+let [...arr] = gen(3); // ['a', 'b', 'c'];
+```
+
+Equivalent to:
+
+```js
+let arr = ['a', 'b', 'c', 'd', 'e'].slice(0, 3); // ['a', 'b', 'c'];
 ```
 
 Or the last `n` elements:
 
 ```js
-const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
-const [...arr] = gen(-3); // ['c', 'd', 'e'];
+let gen = arraygen(['a', 'b', 'c', 'd', 'e']);
+let [...arr] = gen(-3); // ['c', 'd', 'e'];
 ```
 
-Of course, you can mix and match any of this with other destructuring assignments:
+Equivalent to:
 
 ```js
-const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
+let arr = ['a', 'b', 'c', 'd', 'e'].slice(-3); // ['c', 'd', 'e'];
+```
+
+Grab all elements from `start` to the last element:
+
+```js
+let gen = arraygen(['a', 'b', 'c', 'd', 'e']);
+let [...arr] = gen(2, 'tail'); // ['c', 'd', 'e']
+```
+
+Equivalent to:
+
+```js
+let arr = ['a', 'b', 'c', 'd', 'e'].slice(2); // ['c', 'd', 'e']
+```
+
+Of course, you can still mix and match any of this with other destructuring assignments:
+
+```js
+const gen = arraygen(['a', 'b', 'c', 'd', 'e'])(-3);
 const [c, ...rest] = gen(-3);
 console.log(`${ c }, ${ JSON.stringify(rest) }`); // c, ["d","e"]
 ```
+
+Equvilant to:
+
+```js
+let [c, ...rest] = ['a', 'b', 'c', 'd', 'e'].slice(-3);
+console.log(`${ c }, ${ JSON.stringify(rest) }`); // c, ["d","e"]
+```
+
+If all this seems silly, it probably is.
+
+Here's what the `arr[Symbol.iterator]()` allows you to do that you can't do with the ES5 `Array` API:
+
+```js
+let g = arraygen(['a', 'b', 'c', 'd', 'e'])(-3);
+g.next(); // { value: 'c', done: false }
+g.next(); // { value: 'd', done: false }
+g.next(); // { value: 'e', done: false }
+g.next(); // { value: undefined, done: true }
+```
+
+What does that buy us? It means that we can pull values one at a time, perhaps in response to asynchronous events, such as user clicks, network communications, etc...
+
+Currently, I do most of those kinds of things using [RxJS](https://github.com/Reactive-Extensions/RxJS), but now that we have native support for something like it in the browser (albeit missing most of the cool utility API), maybe there are good use cases to skip the RxJS dependency.
+
 
 Written for Learn JavaScript with Eric Elliott
 ==============================================
