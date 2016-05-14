@@ -26,6 +26,8 @@ g.next(); // { value: 'e', done: false }
 g.next(); // { value: undefined, done: true }
 ```
 
+This is the same object type that gets returned from generator functions.
+
 What does that buy us? It means that we can pull values one at a time, perhaps in response to asynchronous events, such as user clicks, network communications, etc...
 
 Currently, I do most of those kinds of things using [RxJS](https://github.com/Reactive-Extensions/RxJS), but now that we have native support for something like it (albeit missing most of the cool utility API), maybe there are good use cases to skip the RxJS dependency.
