@@ -12,6 +12,8 @@ npm install --save arraygen
 
 ## Why?
 
+I wrote this as an exercise to get more familiar with generators. All these features are available natively with `Array.prototype.slice()`, and arrays implement the iterable interface, so I'm not sure why you might want to use this in production. Let me know if you come up with a compelling use-case. =)
+
 Destructuring assignment lets you easily grab elements from an array, for example:
 
 ```js
