@@ -1,20 +1,17 @@
-const arraygen = arr => (start, end) => (function* gen () {
-  if (start === undefined) {
-    start = 0;
-    end = arr.length - 1;
-  }
-  if (end === undefined) {
+const arraygen = arr => (start, end) => {
+
+  if (start === undefined) return arr[Symbol.iterator]();
+
+  if (end === undefined && start > -1) {
     end = start - 1;
     start = 0;
   }
-  if (end < 0) {
-    start = arr.length - Math.abs(end + 1);
-    end = arr.length - 1;
+
+  if (start > -1) {
+    end = end + 1;
   }
 
-  for (let i = start; i < end + 1; i++) {
-    yield arr[i];
-  }
-}());
+  return arr.slice(start, end)[Symbol.iterator]();
+};
 
 module.exports = arraygen;
