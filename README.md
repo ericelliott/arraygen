@@ -124,6 +124,8 @@ console.log(`${ c }, ${ JSON.stringify(rest) }`); // c, ["d","e"]
 
 As you can see, the synchronous operations are probably better handled with native `array.slice()`. It's almost certainly less typing, anyway. This slice API is just a convenient way to pre-slice an array while you're grabbing the iterator. I would just use the built-in `Array.prototype.slice()` to do that, but the API has always bothered me a little.
 
+The alternative slice really belongs in its own module. I've already started to extract it. =)
+
 It might get more compelling if you experiment with using asynchronous events to trigger the `.next()` method calls... Enjoy. Let me know if you do anything interesting or fun with this.
 
 
