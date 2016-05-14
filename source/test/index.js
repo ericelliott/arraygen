@@ -13,7 +13,7 @@ test('Head', assert => {
 });
 
 test('Tail', assert => {
-  const msg = 'gen(n, end) should grab all elements between n and end';
+  const msg = 'gen(n, length) should grab all elements between n and the last element';
 
   const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
   const [...actual] = gen(2, 4);
@@ -23,12 +23,45 @@ test('Tail', assert => {
   assert.end();
 });
 
-test('Tail', assert => {
+test('Range', assert => {
+  const msg = 'gen(n, end) should grab all elements between n and end';
+
+  const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
+  const [...actual] = gen(1, 3);
+  const expected = ['b', 'c', 'd'];
+
+  assert.same(actual, expected, msg);
+  assert.end();
+});
+
+test('All', assert => {
   const msg = 'gen() should grab all elements';
 
   const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
   const [...actual] = gen();
   const expected = ['a', 'b', 'c', 'd', 'e'];
+
+  assert.same(actual, expected, msg);
+  assert.end();
+});
+
+test('first n', assert => {
+  const msg = 'gen(n) should grab the first n elements';
+
+  const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
+  const [...actual] = gen(3);
+  const expected = ['a', 'b', 'c'];
+
+  assert.same(actual, expected, msg);
+  assert.end();
+});
+
+test('last n', assert => {
+  const msg = 'gen(-n) should grab the last n elements';
+
+  const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
+  const [...actual] = gen(-3);
+  const expected = ['c', 'd', 'e'];
 
   assert.same(actual, expected, msg);
   assert.end();
