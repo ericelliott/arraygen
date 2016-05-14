@@ -1,6 +1,17 @@
 const test = require('tape');
 const arraygen = require('arraygen');
 
+test('All', assert => {
+  const msg = 'gen() should grab all elements';
+
+  const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
+  const [...actual] = gen();
+  const expected = ['a', 'b', 'c', 'd', 'e'];
+
+  assert.same(actual, expected, msg);
+  assert.end();
+});
+
 test('Head', assert => {
   const msg = 'gen(0, end) should grab all elements between 0 and end';
 
@@ -40,17 +51,6 @@ test('Range', assert => {
   const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
   const [...actual] = gen(1, 3);
   const expected = ['b', 'c', 'd'];
-
-  assert.same(actual, expected, msg);
-  assert.end();
-});
-
-test('All', assert => {
-  const msg = 'gen() should grab all elements';
-
-  const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
-  const [...actual] = gen();
-  const expected = ['a', 'b', 'c', 'd', 'e'];
 
   assert.same(actual, expected, msg);
   assert.end();
