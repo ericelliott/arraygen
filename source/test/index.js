@@ -12,11 +12,22 @@ test('Head', assert => {
   assert.end();
 });
 
-test('Tail', assert => {
+test('Explicit Tail', assert => {
   const msg = 'gen(n, length) should grab all elements between n and the last element';
 
   const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
   const [...actual] = gen(2, 4);
+  const expected = ['c', 'd', 'e'];
+
+  assert.same(actual, expected, msg);
+  assert.end();
+});
+
+test('Tail keyword', assert => {
+  const msg = 'gen(n, \'tail\') should grab all elements between n and the last element';
+
+  const gen = arraygen(['a', 'b', 'c', 'd', 'e']);
+  const [...actual] = gen(2, 'tail');
   const expected = ['c', 'd', 'e'];
 
   assert.same(actual, expected, msg);

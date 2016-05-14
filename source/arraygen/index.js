@@ -7,6 +7,8 @@ const arraygen = arr => (start, end) => {
     start = 0;
   }
 
+  if (end === 'tail') return arr.slice(start)[Symbol.iterator]();
+
   if (start > -1) {
     end = end + 1;
   }
