@@ -4,7 +4,7 @@ Turn any array into a generator.
 
 ## Getting started
 
-For now you'll need a recent version of Node (v6+ works great). This will not work in old browsers unless it gets compiled to ES5. Currently there are no precompiled bundles.
+For now you'll need a recent version of Node (v6+ works great). This will not work in old browsers or old Node versions unless it gets compiled to ES5. Currently there are no precompiled bundles.
 
 ```sh
 npm install --save arraygen
