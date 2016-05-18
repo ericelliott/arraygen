@@ -1,7 +1,7 @@
 const slice = require('slice');
 
-const arraygen = arr => (start, end) => {
-  return slice(arr, start, end)[Symbol.iterator]();
+const arraygen = arr => function* gen (start, end) {
+  yield* slice(arr, start, end);
 };
 
 module.exports = arraygen;
